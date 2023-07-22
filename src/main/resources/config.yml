@@ -1,0 +1,47 @@
+#Fishing-Enabled - Determines whether fishing is enabled or not. (Default: True)
+Fishing-Enabled: true
+# %player% - Players username.
+# %item% - The reward they have won.
+# Unbreakable - Determines whether the item is unbreakable or not. (true/false)
+# enchants (Enchantment:Level) -  Example: 'FIRE_ASPECT:1'
+# Spigot Enchant list - https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html
+rewards:
+  name:
+    material: diamond_ore
+    amount: 2
+    unbreakable: false
+    display:
+      name: "&bDiamond Ore"
+      lore:
+    enchantments:
+      - FIRE_ASPECT:1
+      - DURABILITY:2
+    commands:
+      - eco give %player% 100
+    message: '&aYou won %item%'
+  reward1:
+    material: iron_ore
+    amount: 2
+    unbreakable: false
+    display:
+      name: "&7Diamond Ore"
+      lore:
+    enchantments:
+      - FIRE_ASPECT:1
+      - DURABILITY:2
+    commands:
+      - eco give %player% 100
+    message: '&aYou won %item%'
+  reward2:
+    material: gold_ore
+    amount: 2
+    unbreakable: false
+    display:
+      name: "&aGold Ore"
+      lore:
+    enchantments:
+      - FIRE_ASPECT:1
+      - DURABILITY:2
+    commands:
+      - eco give %player% 100
+    message: '&aYou won %item%'
