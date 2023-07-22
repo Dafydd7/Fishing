@@ -1,0 +1,3 @@
+name: Fishing
+version: '${project.version}'
+main: org.dafy.fishing.Fishing
