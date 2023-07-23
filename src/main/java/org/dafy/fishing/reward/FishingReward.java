@@ -13,11 +13,11 @@ import org.dafy.fishing.Fishing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 public class FishingReward {
     private final Fishing plugin;
     private final List<ItemBuilder> rewards = new ArrayList<>();
-
     private final Random random;
 
     public FishingReward(Fishing plugin) {
@@ -28,15 +28,16 @@ public class FishingReward {
     public void initRewards() {
         FileConfiguration config = this.plugin.getConfig();
         ConfigurationSection rewardsSection = config.getConfigurationSection("rewards.");
-        if (!this.rewards.isEmpty())
-            this.rewards.clear();
+        rewards.clear();
+
         if (rewardsSection == null) {
-            System.out.println("Unable to initialise fishing rewards - data null");
+            plugin.getLogger().log(Level.WARNING, "Unable to initialize fishing rewards - data null");
             return;
         }
+
         for (String key : rewardsSection.getKeys(false)) {
             ItemBuilder itemBuilder = new ItemBuilder(config.getConfigurationSection("rewards." + key));
-            this.rewards.add(itemBuilder);
+            rewards.add(itemBuilder);
         }
     }
 
@@ -73,9 +74,11 @@ public class FishingReward {
             ItemMeta meta = fishItem.getItemMeta();
             fishItem.setAmount(randomReward.getAmount());
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', randomReward.getName()));
-            if (randomReward.isUnbreakable())
+            if (randomReward.isUnbreakable()) {
                 meta.spigot().setUnbreakable(true);
+            }
             fishItem.setItemMeta(meta);
+            fishItem.addUnsafeEnchantments(randomReward.getEnchants());
             player.getInventory().addItem(fishItem);
         }
         //Execute any commands if found

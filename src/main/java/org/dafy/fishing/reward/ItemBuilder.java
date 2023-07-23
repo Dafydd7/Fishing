@@ -3,11 +3,8 @@ package org.dafy.fishing.reward;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 public class ItemBuilder {
     private final int amount;
@@ -25,6 +22,7 @@ public class ItemBuilder {
     private String message;
 
     private List<String> commands;
+    private final HashMap<Enchantment,Integer> enchantments = new HashMap<>();
 
     public ItemBuilder(ConfigurationSection section) {
         this.material = Material.valueOf(section.getString("material", "cod").toUpperCase(Locale.ENGLISH));
@@ -39,6 +37,8 @@ public class ItemBuilder {
         if (section.contains("display.lore"))
             setLore(section.getStringList("display.lore"));
         setUnbreakable(section.getBoolean("unbreakable", false));
+        if (section.contains("enchantments"))
+            setEnchants(section.getStringList("enchantments"));
     }
 
     public Material getMaterial() {
@@ -69,15 +69,17 @@ public class ItemBuilder {
         this.unbreakable = unbreakable;
     }
 
-    public void addEnchants(ConfigurationSection section) {
-        if (!section.contains("enchantments"))
-            return;
-        ItemStack stack = new ItemStack(this.material);
-        Objects.requireNonNull(section.getConfigurationSection("enchantments")).getKeys(false).forEach(enchant -> {
-            section.get("enchantments." + enchant);
-            String[] enchantString = enchant.split(":");
-            stack.addEnchantment(Enchantment.getByName(enchantString[0]), Integer.parseInt(enchantString[1]));
-        });
+    public void setEnchants(List<String> enchants) {
+        for (String enchantString : enchants) {
+            String[] enchantmentData = enchantString.split(":");
+            int enchantmentLevel = Integer.parseInt(enchantmentData[1]);
+            Enchantment enchantment = Enchantment.getByName(enchantmentData[0]);
+            if (enchantment != null)
+                this.enchantments.put(enchantment, enchantmentLevel);
+        }
+    }
+    public Map<Enchantment,Integer> getEnchants(){
+        return this.enchantments;
     }
 
     public List<String> getCommands() {
